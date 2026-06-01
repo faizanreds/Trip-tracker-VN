@@ -128,7 +128,7 @@ input:focus,select:focus{border-color:#378ADD;box-shadow:0 0 0 3px rgba(55,138,2
         <option>Travel insurance</option>
         <option>Visa &amp; fees</option>
         <option>Tips &amp; donations</option>
-        <option>Pre-departure</option>
+        <option>Flights</option>
         <option>Other</option>
       </select>
     </div>
@@ -136,7 +136,7 @@ input:focus,select:focus{border-color:#378ADD;box-shadow:0 0 0 3px rgba(55,138,2
       <select id="ep-country">
         <option value="Vietnam">Vietnam</option>
         <option value="Thailand">Thailand</option>
-        <option value="Pre-departure">Pre-departure</option>
+        <option value="India">India</option>
       </select>
     </div>
     <div><label>Note</label><input type="text" id="ep-note" placeholder="optional"></div>
@@ -151,7 +151,7 @@ input:focus,select:focus{border-color:#378ADD;box-shadow:0 0 0 3px rgba(55,138,2
       <button class="cf-btn active" data-f="All" onclick="setFilter('All')">All</button>
       <button class="cf-btn" data-f="Vietnam" onclick="setFilter('Vietnam')">Vietnam</button>
       <button class="cf-btn" data-f="Thailand" onclick="setFilter('Thailand')">Thailand</button>
-      <button class="cf-btn" data-f="Pre-departure" onclick="setFilter('Pre-departure')">Pre</button>
+      <button class="cf-btn" data-f="India" onclick="setFilter('India')">India</button>
     </div>
   </div>
   <div id="daily-log"></div>
@@ -261,7 +261,7 @@ function renderLog(){
     const rows=items.map(l=>{
       const ri=state.logs.indexOf(l);
       const cTag=l.country==='Vietnam'?'b-vn':l.country==='Thailand'?'b-th':'b-pre';
-      const cLbl=l.country==='Vietnam'?'VN':l.country==='Thailand'?'TH':'Pre';
+      const cLbl=l.country==='Vietnam'?'VN':l.country==='Thailand'?'TH':'IN';
       return `<div class="log-row">
         <span class="badge b-${l.currency.toLowerCase()}" style="margin-top:2px;flex-shrink:0">${l.currency}</span>
         <span class="badge ${cTag}" style="margin-top:2px;flex-shrink:0">${cLbl}</span>
