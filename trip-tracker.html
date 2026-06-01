@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vietnam &amp; Thailand Trip Tracker</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f5f5f0;color:#1a1a1a;min-height:100vh;padding:1rem}
+.container{max-width:680px;margin:0 auto}
+h1{font-size:17px;font-weight:500;margin-bottom:1.25rem;color:#1a1a1a}
+.sl{font-size:11px;font-weight:500;color:#888;letter-spacing:.06em;text-transform:uppercase;margin-bottom:8px}
+.wallets{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:8px;margin-bottom:1.25rem}
+.wc{background:#fff;border-radius:8px;padding:10px 12px;border:0.5px solid rgba(0,0,0,0.08)}
+.wl{font-size:11px;color:#999;margin-bottom:3px}
+.wv{font-size:16px;font-weight:500;color:#1a1a1a}
+.wv.blue{color:#185FA5}
+.ws{font-size:11px;color:#bbb;margin-top:2px}
+.bbar-bg{background:#e8e8e4;border-radius:99px;height:5px;margin-top:5px;overflow:hidden}
+.bbar{height:5px;border-radius:99px;transition:width .3s}
+.tabs{display:flex;gap:6px;margin-bottom:1rem;flex-wrap:wrap}
+.tab{padding:5px 13px;font-size:13px;border:0.5px solid rgba(0,0,0,0.15);border-radius:8px;background:transparent;color:#666;cursor:pointer;font-family:inherit}
+.tab:hover{background:#f0f0eb}
+.tab.active{background:#E6F1FB;color:#185FA5;border-color:transparent}
+.panel{background:#fff;border:0.5px solid rgba(0,0,0,0.08);border-radius:12px;padding:1rem 1.25rem;margin-bottom:1.25rem;display:none}
+.panel.active{display:block}
+.frow{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
+.frow3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:10px}
+label{font-size:12px;color:#666;display:block;margin-bottom:4px}
+input,select{width:100%;padding:7px 10px;font-size:13px;border:0.5px solid rgba(0,0,0,0.15);border-radius:8px;background:#fff;color:#1a1a1a;font-family:inherit;outline:none}
+input:focus,select:focus{border-color:#378ADD;box-shadow:0 0 0 3px rgba(55,138,221,0.12)}
+.btn{padding:7px 15px;font-size:13px;border:0.5px solid rgba(0,0,0,0.15);border-radius:8px;background:transparent;color:#1a1a1a;cursor:pointer;font-family:inherit}
+.btn:hover{background:#f0f0eb}
+.btn:active{transform:scale(.98)}
+.btn-p{background:#E6F1FB;color:#185FA5;border-color:transparent}
+.btn-p:hover{background:#d0e6f7}
+.preview{font-size:13px;color:#888;margin-left:10px}
+.hr{border:none;border-top:0.5px solid rgba(0,0,0,0.08);margin:1rem 0}
+.badge{display:inline-block;padding:2px 7px;border-radius:99px;font-size:11px;font-weight:500}
+.b-vnd{background:#FAEEDA;color:#854F0B}
+.b-thb{background:#EAF3DE;color:#3B6D11}
+.b-usd{background:#E6F1FB;color:#185FA5}
+.b-inr{background:#FBEAF0;color:#993556}
+.b-vn{background:#E6F1FB;color:#185FA5}
+.b-th{background:#EAF3DE;color:#3B6D11}
+.b-pre{background:#F1EFE8;color:#5F5E5A}
+.del-btn{background:none;border:none;cursor:pointer;color:#bbb;font-size:18px;padding:2px 4px;line-height:1;font-family:inherit}
+.del-btn:hover{color:#E24B4A}
+.empty{text-align:center;padding:1.5rem;color:#bbb;font-size:13px}
+.day-group{margin-bottom:1.25rem}
+.day-hdr{font-size:12px;font-weight:500;color:#666;padding:4px 0;border-bottom:0.5px solid rgba(0,0,0,0.08);margin-bottom:6px;display:flex;justify-content:space-between;align-items:center}
+.day-pill{font-size:11px;padding:1px 7px;border-radius:99px}
+.day-ok{background:#EAF3DE;color:#3B6D11}
+.day-over{background:#FCEBEB;color:#A32D2D}
+.log-row{display:flex;align-items:flex-start;gap:7px;padding:6px 0;border-bottom:0.5px solid rgba(0,0,0,0.06)}
+.log-row:last-child{border-bottom:none}
+.log-main{flex:1;min-width:0}
+.log-title{font-size:13px;color:#1a1a1a}
+.log-amt{font-size:13px;font-weight:500;color:#1a1a1a;white-space:nowrap;margin-left:auto;padding-left:6px}
+.tgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px;margin-bottom:1rem}
+.tc{background:#f8f8f4;border-radius:8px;padding:10px 12px}
+.tl{font-size:11px;color:#999;margin-bottom:4px}
+.tv{font-size:15px;font-weight:500;color:#1a1a1a}
+.tc-sub{font-size:11px;color:#bbb;margin-top:2px}
+.trip-card{background:#E6F1FB;border-radius:12px;padding:12px 16px;margin-bottom:1rem;display:flex;justify-content:space-between;align-items:center}
+.trip-l{font-size:12px;color:#185FA5}
+.trip-v{font-size:22px;font-weight:500;color:#185FA5}
+.trip-s{font-size:11px;color:#378ADD;margin-top:2px}
+.cat-row{display:flex;justify-content:space-between;font-size:12px;padding:5px 0;color:#555;border-bottom:0.5px solid rgba(0,0,0,0.06)}
+.cat-row:last-child{border-bottom:none}
+.exch-row{display:flex;align-items:flex-start;gap:8px;padding:7px 0;border-bottom:0.5px solid rgba(0,0,0,0.06)}
+.exch-row:last-child{border-bottom:none}
+.exch-main{flex:1;min-width:0}
+.exch-title{font-size:13px;color:#1a1a1a}
+.exch-sub{font-size:11px;color:#aaa;margin-top:2px}
+.exch-rate{font-size:13px;font-weight:500;color:#1a1a1a;white-space:nowrap}
+.cf{display:flex;gap:6px;margin-bottom:1rem;flex-wrap:wrap}
+.cf-btn{padding:3px 10px;font-size:12px;border:0.5px solid rgba(0,0,0,0.15);border-radius:99px;background:transparent;color:#666;cursor:pointer;font-family:inherit}
+.cf-btn:hover{background:#f0f0eb}
+.cf-btn.active{background:#f0f0eb;color:#1a1a1a;border-color:rgba(0,0,0,0.25)}
+@media(max-width:480px){
+  .frow3{grid-template-columns:1fr 1fr}
+  .wallets{grid-template-columns:repeat(auto-fit,minmax(100px,1fr))}
+  .wv{font-size:14px}
+}
+</style>
+</head>
+<body>
+<div class="container">
+<h1>Vietnam &amp; Thailand — trip tracker</h1>
+
+<div class="sl">Wallets</div>
+<div class="wallets" id="wallets"></div>
+
+<div class="tabs">
+  <button class="tab active" onclick="switchTab('expense')">Expense</button>
+  <button class="tab" onclick="switchTab('log')">Daily log</button>
+  <button class="tab" onclick="switchTab('totals')">Totals</button>
+  <button class="tab" onclick="switchTab('exchange')">Exchange</button>
+</div>
+
+<div id="tab-expense" class="panel active">
+  <div class="frow">
+    <div><label>Amount</label><input type="number" id="ep-amt" placeholder="e.g. 150000" min="0" step="1"></div>
+    <div><label>Currency</label>
+      <select id="ep-cur">
+        <option value="VND">VND</option>
+        <option value="THB">THB</option>
+        <option value="USD">USD</option>
+        <option value="INR">INR</option>
+      </select>
+    </div>
+  </div>
+  <div class="frow3">
+    <div><label>Category</label>
+      <select id="ep-cat">
+        <option>Accommodation</option>
+        <option>Food &amp; drink</option>
+        <option>Street food</option>
+        <option>Drinks &amp; nightlife</option>
+        <option>Transport</option>
+        <option>Activities</option>
+        <option>Attractions &amp; entry fees</option>
+        <option>Shopping</option>
+        <option>SIM / data</option>
+        <option>Laundry</option>
+        <option>Health &amp; pharmacy</option>
+        <option>Travel insurance</option>
+        <option>Visa &amp; fees</option>
+        <option>Tips &amp; donations</option>
+        <option>Pre-departure</option>
+        <option>Other</option>
+      </select>
+    </div>
+    <div><label>Country</label>
+      <select id="ep-country">
+        <option value="Vietnam">Vietnam</option>
+        <option value="Thailand">Thailand</option>
+        <option value="Pre-departure">Pre-departure</option>
+      </select>
+    </div>
+    <div><label>Note</label><input type="text" id="ep-note" placeholder="optional"></div>
+  </div>
+  <button class="btn btn-p" onclick="logExpense()">Add expense</button>
+</div>
+
+<div id="tab-log" class="panel">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;flex-wrap:wrap;gap:8px">
+    <div class="sl" style="margin:0">All expenses</div>
+    <div class="cf" style="margin:0">
+      <button class="cf-btn active" data-f="All" onclick="setFilter('All')">All</button>
+      <button class="cf-btn" data-f="Vietnam" onclick="setFilter('Vietnam')">Vietnam</button>
+      <button class="cf-btn" data-f="Thailand" onclick="setFilter('Thailand')">Thailand</button>
+      <button class="cf-btn" data-f="Pre-departure" onclick="setFilter('Pre-departure')">Pre</button>
+    </div>
+  </div>
+  <div id="daily-log"></div>
+</div>
+
+<div id="tab-totals" class="panel">
+  <div id="trip-block"></div>
+  <div class="sl">By currency</div>
+  <div class="tgrid" id="cur-totals"></div>
+  <hr class="hr">
+  <div class="sl">By country</div>
+  <div class="tgrid" id="country-totals"></div>
+  <hr class="hr">
+  <div class="sl">By category</div>
+  <div id="cat-totals"></div>
+</div>
+
+<div id="tab-exchange" class="panel">
+  <div class="frow">
+    <div><label>USD amount</label><input type="number" id="ex-usd" placeholder="e.g. 200" min="0" step="0.01"></div>
+    <div><label>To currency</label>
+      <select id="ex-cur">
+        <option value="VND">VND – Vietnamese Đồng</option>
+        <option value="THB">THB – Thai Baht</option>
+      </select>
+    </div>
+  </div>
+  <div class="frow">
+    <div><label>Rate (1 USD = ?)</label><input type="number" id="ex-rate" placeholder="e.g. 25400" min="0" step="1"></div>
+    <div><label>Location / note</label><input type="text" id="ex-note" placeholder="e.g. Goldsmith, Bui Vien"></div>
+  </div>
+  <div style="display:flex;align-items:center;margin-bottom:1.25rem">
+    <button class="btn btn-p" onclick="logExchange()">Add exchange</button>
+    <span class="preview" id="ex-preview"></span>
+  </div>
+  <hr class="hr">
+  <div class="sl">Rate history</div>
+  <div id="exch-history"></div>
+</div>
+</div>
+
+<script>
+const INIT_USD=1300,INR_RATE=96.35,DAILY_BUDGET=35;
+const APPROX={VND:25400,THB:34};
+let logFilter='All';
+let state={usd:INIT_USD,vnd:0,thb:0,inr:0,logs:[]};
+
+const fV=n=>new Intl.NumberFormat('vi-VN').format(Math.round(n))+' ₫';
+const fT=n=>'฿'+new Intl.NumberFormat('en').format(Math.round(n));
+const fU=n=>'$'+Math.abs(parseFloat(n)).toFixed(2);
+const fI=n=>'₹'+new Intl.NumberFormat('en-IN').format(Math.round(Math.abs(n)));
+function fmt(n,c){if(c==='VND')return fV(n);if(c==='THB')return fT(n);if(c==='USD')return fU(n);if(c==='INR')return fI(n);return n;}
+function toUSD(a,c){if(c==='USD')return+a;if(c==='VND')return+a/APPROX.VND;if(c==='THB')return+a/APPROX.THB;if(c==='INR')return+a/INR_RATE;return 0;}
+function today(){const d=new Date();return[String(d.getDate()).padStart(2,'0'),String(d.getMonth()+1).padStart(2,'0'),d.getFullYear()].join('/');}
+
+function load(){
+  try{const s=localStorage.getItem('trip_tracker');if(s)state=JSON.parse(s);}catch(e){}
+  render();
+}
+function save(){
+  try{localStorage.setItem('trip_tracker',JSON.stringify(state));}catch(e){}
+}
+
+function render(){
+  renderWallets();
+  const w=document.querySelector('.tab.active')?.textContent.toLowerCase().trim();
+  if(w==='daily log')renderLog();
+  if(w==='totals')renderTotals();
+  if(w==='exchange')renderExch();
+}
+
+function renderWallets(){
+  const exps=state.logs.filter(l=>l.type==='expense');
+  const totalUSD=exps.reduce((s,l)=>s+toUSD(l.amount,l.currency),0);
+  const days=Math.max(1,[...new Set(exps.map(l=>l.date||today()))].length);
+  const avg=totalUSD/days;
+  const pct=Math.min(100,(avg/DAILY_BUDGET)*100);
+  const col=avg>DAILY_BUDGET?'#E24B4A':'#3B6D11';
+  document.getElementById('wallets').innerHTML=`
+    <div class="wc"><div class="wl">USD remaining</div><div class="wv blue">${fU(state.usd)}</div><div class="ws">of $${INIT_USD}</div></div>
+    <div class="wc"><div class="wl">VND</div><div class="wv" style="font-size:13px">${fV(state.vnd)}</div><div class="ws">in hand</div></div>
+    <div class="wc"><div class="wl">THB</div><div class="wv" style="font-size:14px">${fT(state.thb)}</div><div class="ws">in hand</div></div>
+    <div class="wc"><div class="wl">INR spent</div><div class="wv" style="font-size:13px">${fI(state.inr)}</div><div class="ws">pre-departure</div></div>
+    <div class="wc"><div class="wl">Avg/day vs $${DAILY_BUDGET}</div><div class="wv" style="color:${col};font-size:15px">${fU(avg)}</div><div class="bbar-bg"><div class="bbar" style="width:${pct.toFixed(0)}%;background:${col}"></div></div></div>`;
+}
+
+function setFilter(f){
+  logFilter=f;
+  document.querySelectorAll('.cf-btn').forEach(b=>b.classList.toggle('active',b.dataset.f===f));
+  renderLog();
+}
+
+function renderLog(){
+  const el=document.getElementById('daily-log');
+  let exps=state.logs.filter(l=>l.type==='expense');
+  if(logFilter!=='All')exps=exps.filter(l=>l.country===logFilter);
+  if(!exps.length){el.innerHTML='<div class="empty">No expenses yet</div>';return;}
+  const byDay={};
+  exps.forEach(l=>{const k=l.date||today();if(!byDay[k])byDay[k]=[];byDay[k].push(l);});
+  const days=Object.keys(byDay).sort((a,b)=>{const pa=a.split('/'),pb=b.split('/');return new Date(+pb[2],+pb[1]-1,+pb[0])-new Date(+pa[2],+pa[1]-1,+pa[0]);});
+  el.innerHTML=days.map(day=>{
+    const items=byDay[day];
+    const dayUSD=items.reduce((s,l)=>s+toUSD(l.amount,l.currency),0);
+    const over=dayUSD>DAILY_BUDGET;
+    const totals={};items.forEach(i=>{totals[i.currency]=(totals[i.currency]||0)+ +i.amount;});
+    const totStr=Object.entries(totals).map(([c,v])=>fmt(v,c)).join(' · ');
+    const rows=items.map(l=>{
+      const ri=state.logs.indexOf(l);
+      const cTag=l.country==='Vietnam'?'b-vn':l.country==='Thailand'?'b-th':'b-pre';
+      const cLbl=l.country==='Vietnam'?'VN':l.country==='Thailand'?'TH':'Pre';
+      return `<div class="log-row">
+        <span class="badge b-${l.currency.toLowerCase()}" style="margin-top:2px;flex-shrink:0">${l.currency}</span>
+        <span class="badge ${cTag}" style="margin-top:2px;flex-shrink:0">${cLbl}</span>
+        <div class="log-main"><div class="log-title">${l.cat}${l.note?' · '+l.note:''}</div></div>
+        <div class="log-amt">${fmt(l.amount,l.currency)}</div>
+        <button class="del-btn" onclick="delLog(${ri})" title="Delete">×</button>
+      </div>`;
+    }).join('');
+    return `<div class="day-group"><div class="day-hdr"><span>${day} <span style="font-size:11px;color:#aaa;font-weight:400">${totStr}</span></span><span class="day-pill ${over?'day-over':'day-ok'}">${fU(dayUSD)} · ${over?'over':'on track'}</span></div>${rows}</div>`;
+  }).join('');
+}
+
+function renderTotals(){
+  const exps=state.logs.filter(l=>l.type==='expense');
+  const totalUSD=exps.reduce((s,l)=>s+toUSD(l.amount,l.currency),0);
+  document.getElementById('trip-block').innerHTML=`
+    <div class="trip-card">
+      <div><div class="trip-l">Trip total (≈ USD)</div><div class="trip-v">${fU(totalUSD)}</div><div class="trip-s">${fI(totalUSD*INR_RATE)} at cost basis</div></div>
+      <div style="text-align:right"><div class="trip-l">of $${INIT_USD}</div><div style="font-size:20px;font-weight:500;color:#185FA5">${((totalUSD/INIT_USD)*100).toFixed(0)}%</div><div class="trip-s">$${state.usd.toFixed(2)} remaining</div></div>
+    </div>`;
+  const bC={VND:0,THB:0,USD:0,INR:0},bCn={VND:0,THB:0,USD:0,INR:0};
+  exps.forEach(l=>{bC[l.currency]+= +l.amount;bCn[l.currency]++;});
+  document.getElementById('cur-totals').innerHTML=['VND','THB','USD','INR'].map(c=>`<div class="tc"><div class="tl">${c} spent</div><div class="tv" style="font-size:13px">${fmt(bC[c],c)}</div><div class="tc-sub">${bCn[c]} items</div></div>`).join('');
+  const bCo={};
+  exps.forEach(l=>{const co=l.country||'Unknown';if(!bCo[co])bCo[co]=0;bCo[co]+=toUSD(l.amount,l.currency);});
+  document.getElementById('country-totals').innerHTML=Object.entries(bCo).map(([co,v])=>`<div class="tc"><div class="tl">${co}</div><div class="tv">${fU(v)}</div><div class="tc-sub">≈ USD</div></div>`).join('')||'<div class="empty">No data yet</div>';
+  const bCat={};
+  exps.forEach(l=>{if(!bCat[l.cat])bCat[l.cat]={usd:0,bd:{}};bCat[l.cat].usd+=toUSD(l.amount,l.currency);bCat[l.cat].bd[l.currency]=(bCat[l.cat].bd[l.currency]||0)+ +l.amount;});
+  const cks=Object.keys(bCat).sort((a,b)=>bCat[b].usd-bCat[a].usd);
+  document.getElementById('cat-totals').innerHTML=cks.length?cks.map(cat=>`<div class="cat-row"><span>${cat}</span><span>${Object.entries(bCat[cat].bd).map(([c,v])=>fmt(v,c)).join(' + ')} <span style="color:#bbb;font-size:11px">(≈${fU(bCat[cat].usd)})</span></span></div>`).join(''):'<div class="empty">No data yet</div>';
+}
+
+function renderExch(){
+  const exs=state.logs.filter(l=>l.type==='exchange');
+  const el=document.getElementById('exch-history');
+  if(!exs.length){el.innerHTML='<div class="empty">No exchanges yet</div>';return;}
+  const byCur={};
+  exs.forEach(l=>{if(!byCur[l.currency])byCur[l.currency]=[];byCur[l.currency].push(l);});
+  el.innerHTML=Object.entries(byCur).map(([cur,list])=>{
+    const rates=list.map(e=>+e.rate);
+    const avg=rates.reduce((a,b)=>a+b,0)/rates.length;
+    const best=Math.max(...rates);
+    const rows=[...list].reverse().map(l=>{
+      const ri=state.logs.indexOf(l);
+      const isBest=+l.rate===best&&list.length>1;
+      return `<div class="exch-row">
+        <div class="exch-main"><div class="exch-title">${fU(l.usd)} → ${fmt(l.received,cur)}${isBest?' <span style="font-size:11px;background:#EAF3DE;color:#3B6D11;padding:1px 6px;border-radius:99px">best</span>':''}</div><div class="exch-sub">${l.date||''}${l.note?' · '+l.note:''}</div></div>
+        <div class="exch-rate">1 USD = ${new Intl.NumberFormat('en').format(Math.round(l.rate))} ${cur}</div>
+        <button class="del-btn" onclick="delLog(${ri})" title="Delete">×</button>
+      </div>`;
+    }).join('');
+    return `<div style="margin-bottom:1rem"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px"><span class="badge b-${cur.toLowerCase()}">${cur}</span><span style="font-size:11px;color:#aaa">avg ${new Intl.NumberFormat('en').format(Math.round(avg))} · best ${new Intl.NumberFormat('en').format(Math.round(best))}</span></div>${rows}</div>`;
+  }).join('');
+}
+
+function switchTab(tab){
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.getElementById('tab-'+tab).classList.add('active');
+  document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active',t.textContent.toLowerCase().trim()===tab.replace('-',' ')));
+  if(tab==='log')renderLog();
+  if(tab==='totals')renderTotals();
+  if(tab==='exchange')renderExch();
+}
+
+document.getElementById('ex-usd').addEventListener('input',px);
+document.getElementById('ex-rate').addEventListener('input',px);
+document.getElementById('ex-cur').addEventListener('change',px);
+function px(){const u=+document.getElementById('ex-usd').value,r=+document.getElementById('ex-rate').value,c=document.getElementById('ex-cur').value;document.getElementById('ex-preview').textContent=(u>0&&r>0)?'→ '+fmt(u*r,c):'';}
+
+function logExchange(){
+  const usd=+document.getElementById('ex-usd').value,rate=+document.getElementById('ex-rate').value;
+  const cur=document.getElementById('ex-cur').value,note=document.getElementById('ex-note').value.trim();
+  if(!usd||!rate){alert('Enter USD amount and rate.');return;}
+  if(usd>state.usd){alert('Not enough USD!');return;}
+  const received=usd*rate;
+  state.usd=parseFloat((state.usd-usd).toFixed(2));
+  if(cur==='VND')state.vnd+=received;else state.thb+=received;
+  state.logs.push({type:'exchange',date:today(),usd,rate,currency:cur,received,note});
+  save();render();
+  ['ex-usd','ex-rate','ex-note'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('ex-preview').textContent='';
+  renderExch();
+}
+
+function logExpense(){
+  const amt=+document.getElementById('ep-amt').value,cur=document.getElementById('ep-cur').value;
+  const cat=document.getElementById('ep-cat').value,country=document.getElementById('ep-country').value;
+  const note=document.getElementById('ep-note').value.trim();
+  if(!amt){alert('Enter an amount.');return;}
+  if(cur==='VND'&&amt>state.vnd){alert('Not enough VND!');return;}
+  if(cur==='THB'&&amt>state.thb){alert('Not enough THB!');return;}
+  if(cur==='USD'&&amt>state.usd){alert('Not enough USD!');return;}
+  if(cur==='VND')state.vnd-=amt;else if(cur==='THB')state.thb-=amt;else if(cur==='USD')state.usd-=amt;else if(cur==='INR')state.inr+=amt;
+  state.logs.push({type:'expense',date:today(),amount:amt,currency:cur,cat,country,note});
+  save();render();
+  document.getElementById('ep-amt').value='';document.getElementById('ep-note').value='';
+}
+
+function delLog(i){
+  const l=state.logs[i];
+  if(l.type==='exchange'){state.usd+=+l.usd;if(l.currency==='VND')state.vnd-=l.received;else state.thb-=l.received;}
+  else{if(l.currency==='VND')state.vnd+= +l.amount;else if(l.currency==='THB')state.thb+= +l.amount;else if(l.currency==='USD')state.usd+= +l.amount;else if(l.currency==='INR')state.inr-= +l.amount;}
+  state.logs.splice(i,1);save();render();
+  const w=document.querySelector('.tab.active')?.textContent.toLowerCase().trim();
+  if(w==='daily log')renderLog();if(w==='exchange')renderExch();
+}
+
+load();
+</script>
+</body>
+</html>
